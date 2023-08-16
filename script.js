@@ -32,7 +32,6 @@ function addNote(title, description) {
   })
     .then((response) => response.json())
     .then((data) => {
-      console.log(data); // Log the server response
       clearForm();
       getAllNotes();
     });
@@ -104,7 +103,6 @@ function deleteNote(id) {
     getAllNotes();
   });
 }
-
 // Update a note
 function updateNote(id) {
   const updatedData = {
@@ -122,12 +120,10 @@ function updateNote(id) {
   })
     .then((response) => response.json())
     .then((data) => {
-      console.log(data); // Log the server response
       clearForm();
       getAllNotes();
     });
 }
-
 // Event listeners
 saveButton.addEventListener("click", function () {
   addNote(titleInput.value, descriptionInput.value);
