@@ -1,84 +1,95 @@
-*{
- margin:0;
- padding:0;
- box-sizing:border-box;
- font-family: Verdana, Geneva, Tahoma, sans-serif
+/* Universal Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
-body{
-    width:100%;
-    height:100vh;
+
+/* Body Styling */
+body {
+  width: 100%;
+  height: 100vh;
 }
-.container{
-    width:100%;
-    height:100vh;
-    height: flex-start;
-    display: flex;
+
+/* Container Styles */
+.container {
+  width: 100%;
+  height: 100vh;
+  display: flex;
 }
-.notes_sidebar{
-    width: 400px;
-    height:100%;
-    padding: 50px;
-    border-right: 2px solid;
-    border-color:black;
+
+/* Sidebar Styling */
+.notes_sidebar {
+  width: 400px;
+  height: 100%;
+  padding: 50px;
+  border-right: 2px solid;
+  border-color: black;
 }
-.notes_sidebar input{
-    width: 100%;
-    font-size: 13px;
-    padding:10px;
-    margin-bottom: 10px;
+
+.notes_sidebar input,
+.notes_sidebar textarea {
+  width: 100%;
+  font-size: 13px;
+  padding: 10px;
+  margin-bottom: 10px;
 }
-.notes_sidebar textarea{
-    font-size: 13px;
-    padding:10px;
-    width: 100%;
-    resize: vertical;
-    height: 85%;
+
+.notes_sidebar button {
+  margin-bottom: 10px;
+  outline: none;
+  border: none;
+  background-color: #353535;
+  color: #ffff;
+  padding: 5px;
+  border-radius: 2px;
+  cursor: pointer;
 }
-.notes_sidebar button{
-    margin-bottom: 10px;
-    outline: none;
-    border: none;
-    background-color: #353535;
-    color: #ffff;
-    padding: 5px;
-    border-radius: 2px;
-    cursor:pointer;
+
+/* Notes Container Styling */
+.notes_container {
+  width: 100%;
+  height: 100%;
+  padding: 50px;
+  flex: 1;
+  align-items: flex-start;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  overflow-y: auto;
 }
-.notes_container{
-    width: 100%;
-    height: 100%;
-    padding: 50px;
-    flex: 1;
-    align-items: flex-start;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    overflow-y: auto;
+
+/* Note Styling */
+.note {
+  background-color: #eee;
+  padding: 20px;
+  width: 23%;
+  height: 200px;
+  margin-right: 2px;
+  margin-bottom: 2px;
+  overflow-y: auto;
 }
-.note{
-    background-color: #eee;
-    padding: 20px;
-    width: 23%;
-    height: 200px;
-    margin-right: 2px;
-    margin-bottom: 2px;
-    overflow-y: auto;
+
+.note h3 {
+  color: red;
+  word-wrap: break-word;
+  margin-left: 2px;
+  margin-bottom: 10px;
 }
-.note h3{
-    color: red;
-    word-wrap: break-word;
-    margin-left: 2px;
-    margin-bottom: 10px;
+
+.note p {
+  overflow: auto;
+  word-wrap: break-word;
+  max-height: 200px;
+  margin: 2px;
 }
-.note p{
-    overflow: auto;
-    word-wrap: break-word;
-    max-height: 200px;
-    margin: 2px;
+
+/* Hidden Delete and Update Buttons */
+#btnDelete {
+  display: none;
 }
-#btnDelete{
-    display:none;
-}
-#btnUpdate{
-    display:none;
+
+#btnUpdate {
+  display: none;
 }

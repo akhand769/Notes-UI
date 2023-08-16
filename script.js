@@ -1,118 +1,142 @@
-const saveButton = document.querySelector('#btnSave')
-const titleInput= document.querySelector("#title");
-const descriptionInput= document.querySelector("#description");
-const notesContainer= document.querySelector("#notes_container");
-const btnDelete= document.querySelector("#btnDelete");
-const btnUpdate= document.querySelector("#btnUpdate");
+// DOM elements
+const saveButton = document.querySelector("#btnSave");
+const titleInput = document.querySelector("#title");
+const descriptionInput = document.querySelector("#description");
+const notesContainer = document.querySelector("#notes_container");
+const btnDelete = document.querySelector("#btnDelete");
+const btnUpdate = document.querySelector("#btnUpdate");
+
+// Initialize by loading notes
 getAllNotes();
 
-function clearform()
-{
-    titleInput.value='';
-    descriptionInput.value='';
+// Clear form inputs
+function clearForm() {
+  titleInput.value = "";
+  descriptionInput.value = "";
 }
 
-function AddNote(title , description)
-{
-    const body={
-        title: title,
-        description: description,
-        isVisible: true,
-    };
-    fetch('https://localhost:7260/api/Notes',{
-        method: 'POST',
-        body: JSON.stringify(body),
-        headers:
-        {
-            "content-type":"application/json"
-        }
-    }).then(data=>data.json())
-    .then(response=> console.log(response)).then(response=>{
-        clearform();
-        getAllNotes();
+// Add a new note
+function addNote(title, description) {
+  const noteData = {
+    title: title,
+    description: description,
+    isVisible: true,
+  };
+
+  fetch("https://localhost:7260/api/Notes", {
+    method: "POST",
+    body: JSON.stringify(noteData),
+    headers: {
+      "content-type": "application/json",
+    },
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(data); // Log the server response
+      clearForm();
+      getAllNotes();
     });
 }
 
-function getAllNotes(){
-    btnDelete.style.display='none';
-    saveButton.style.display='inline';
-    btnUpdate.style.display='none';
-    fetch('https://localhost:7260/api/Notes').then(console.log("hello")).then(data=>data.json())
-    .then(response=>DisplayNotes(response));
+// Retrieve all notes from the server
+function getAllNotes() {
+  btnDelete.style.display = "none";
+  saveButton.style.display = "inline";
+  btnUpdate.style.display = "none";
+
+  fetch("https://localhost:7260/api/Notes")
+    .then((response) => response.json())
+    .then((data) => displayNotes(data));
 }
-function getNotesById(id){
-    fetch(`https://localhost:7260/api/Notes/${id}`).then(data=>data.json())
-    .then(response=>displayNoteInForm(response));
-}
-function displayNoteInForm(variable)
-{
-    titleInput.value=variable.title;
-    descriptionInput.value=variable.description;
-}
-function DisplayNotes(notes)
-{
-    let allnotes='';
-    notes.forEach(element => {
-        const appendableString = `
-        <div class=note data-id="${element.id}">
-            <h3>${element.title}</h3>
-            <p>${element.description}<p>
-        </div>
-        `
-    allnotes+=appendableString
+
+// Display notes in the UI
+function displayNotes(notes) {
+  let allNotesHTML = "";
+
+  notes.forEach((note) => {
+    const noteHTML = `
+      <div class="note" data-id="${note.id}">
+        <h3>${note.title}</h3>
+        <p>${note.description}</p>
+      </div>`;
+
+    allNotesHTML += noteHTML;
+  });
+
+  notesContainer.innerHTML = allNotesHTML;
+
+  // Add click event listeners to each note
+  const noteElements = document.querySelectorAll(".note");
+  noteElements.forEach((noteElement) => {
+    noteElement.addEventListener("click", function () {
+      btnDelete.style.display = "inline";
+      saveButton.style.display = "none";
+      btnUpdate.style.display = "inline";
+
+      const noteId = noteElement.dataset.id;
+      btnDelete.value = noteId;
+      btnUpdate.value = noteId;
+      getNotesById(noteId);
     });
-    notesContainer.innerHTML=allnotes;
-
-    //addeventlistener
-    value = document.querySelectorAll(".note");
-    value.forEach(element=>
-            element.addEventListener('click',function(){
-                btnDelete.style.display='inline';
-                saveButton.style.display='none';
-                btnUpdate.style.display='inline';
-                btnDelete.value=element.dataset.id;
-                btnUpdate.value=element.dataset.id;
-                getNotesById(element.dataset.id);  
-            })
-    )
+  });
 }
-saveButton.addEventListener('click', function(){
-    AddNote(titleInput.value,descriptionInput.value);
-})
 
-function DeleteNote(id)
-{
-    fetch(`https://localhost:7260/api/Notes/${id}`,{
-        method: 'DELETE',}).then(alert("YOUR NOTE HAS BEEN DELETED SUCCESSFULLY")).then(response=>{
-        clearform();
-        getAllNotes();
+// Retrieve a specific note by its ID
+function getNotesById(id) {
+  fetch(`https://localhost:7260/api/Notes/${id}`)
+    .then((response) => response.json())
+    .then((data) => displayNoteInForm(data));
+}
+
+// Display a note in the form for editing
+function displayNoteInForm(note) {
+  titleInput.value = note.title;
+  descriptionInput.value = note.description;
+}
+
+// Delete a note
+function deleteNote(id) {
+  fetch(`https://localhost:7260/api/Notes/${id}`, {
+    method: "DELETE",
+  }).then(() => {
+    alert("Note deleted successfully.");
+    clearForm();
+    getAllNotes();
+  });
+}
+
+// Update a note
+function updateNote(id) {
+  const updatedData = {
+    title: titleInput.value,
+    description: descriptionInput.value,
+    isVisible: true,
+  };
+
+  fetch(`https://localhost:7260/api/Notes/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(updatedData),
+    headers: {
+      "content-type": "application/json",
+    },
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(data); // Log the server response
+      clearForm();
+      getAllNotes();
     });
 }
 
-function UpdateNote(id)
-{
-    const body={
-        title: titleInput.value,
-        description: descriptionInput.value,
-        isVisible: true,
-    };
-    fetch(`https://localhost:7260/api/Notes/${id}`,{
-        method: 'PUT',
-        body: JSON.stringify(body),
-        headers:
-        {
-            "content-type":"application/json"
-        }
-    }).then(data=>data.json())
-    .then(response=> console.log(response)).then(response=>{
-        clearform();
-        getAllNotes();
-    });
-}
-btnDelete.addEventListener('click',function(){
-    DeleteNote(btnDelete.value);
-})
+// Event listeners
+saveButton.addEventListener("click", function () {
+  addNote(titleInput.value, descriptionInput.value);
+});
 
-btnUpdate.addEventListener('click',function(){
-    UpdateNote(btnUpdate.value);
-})
+btnDelete.addEventListener("click", function () {
+  deleteNote(btnDelete.value);
+});
+
+btnUpdate.addEventListener("click", function () {
+  updateNote(btnUpdate.value);
+});
